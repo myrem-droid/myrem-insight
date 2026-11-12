@@ -1,0 +1,1284 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#10251d">
+<meta name="description" content="MYREM INSIGHT: descubre oportunidades de mejora y soluciones digitales para tu negocio.">
+
+<title>MYREM INSIGHT — Diagnóstico Digital</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg: #f5f7f4;
+  --surface: #ffffff;
+  --dark: #10251d;
+  --green: #1e6549;
+  --green-light: #eaf3ed;
+  --muted: #78857d;
+  --border: #e4eae5;
+  --text: #23352b;
+  --danger: #c64c4c;
+  --radius: 17px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+}
+
+button, input, textarea, select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* NAVBAR */
+
+.navbar {
+  height: 76px;
+  background: rgba(255,255,255,.92);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 7%;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.brand-name {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 800;
+  font-size: 21px;
+  letter-spacing: -1px;
+  color: var(--dark);
+}
+
+.brand-sub {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.nav-right {
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  background: #3c9b69;
+  border-radius: 50%;
+}
+
+/* HERO */
+
+.hero {
+  background: var(--dark);
+  color: white;
+  padding: 76px 7% 85px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  width: 430px;
+  height: 430px;
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 50%;
+  right: 5%;
+  top: -220px;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  width: 310px;
+  height: 310px;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 50%;
+  right: 12%;
+  top: -160px;
+}
+
+.hero-content {
+  max-width: 850px;
+  position: relative;
+  z-index: 1;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #a9cbb5;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 23px;
+}
+
+.eyebrow-line {
+  width: 24px;
+  height: 1px;
+  background: #76ad8c;
+}
+
+.hero h1 {
+  font-family: 'Manrope', sans-serif;
+  font-size: clamp(38px, 5.5vw, 66px);
+  line-height: 1.08;
+  letter-spacing: -2.7px;
+  max-width: 760px;
+  margin-bottom: 22px;
+}
+
+.hero h1 span {
+  color: #a7cbb3;
+}
+
+.hero-description {
+  max-width: 600px;
+  color: #c2d0c7;
+  line-height: 1.8;
+  font-size: 15px;
+}
+
+.hero-meta {
+  display: flex;
+  gap: 25px;
+  flex-wrap: wrap;
+  margin-top: 31px;
+  color: #b4c7ba;
+  font-size: 12px;
+}
+
+.hero-meta span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* MAIN */
+
+.main {
+  max-width: 1050px;
+  margin: -35px auto 80px;
+  padding: 0 22px;
+  position: relative;
+  z-index: 2;
+}
+
+.form-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 15px 55px rgba(16,37,29,.07);
+  overflow: hidden;
+}
+
+.form-top {
+  padding: 29px 38px 25px;
+  border-bottom: 1px solid var(--border);
+}
+
+.form-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 18px;
+}
+
+.form-top h2 {
+  font-family: 'Manrope', sans-serif;
+  font-size: 18px;
+  color: var(--dark);
+}
+
+.step-counter {
+  color: var(--green);
+  background: var(--green-light);
+  padding: 7px 12px;
+  border-radius: 30px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.progress-track {
+  height: 5px;
+  width: 100%;
+  background: #edf0ed;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 25%;
+  background: var(--green);
+  border-radius: 20px;
+  transition: width .3s ease;
+}
+
+.steps-labels {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 13px;
+  gap: 8px;
+}
+
+.steps-labels span {
+  color: #a2aaa4;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.steps-labels span.active {
+  color: var(--green);
+}
+
+/* FORM CONTENT */
+
+.form-body {
+  padding: 38px;
+}
+
+.step {
+  display: none;
+  animation: appear .3s ease;
+}
+
+.step.active {
+  display: block;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.section-number {
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+  margin-bottom: 12px;
+}
+
+.step h3 {
+  font-family: 'Manrope', sans-serif;
+  font-size: 29px;
+  letter-spacing: -1px;
+  color: var(--dark);
+  margin-bottom: 9px;
+}
+
+.step-description {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+  max-width: 650px;
+  margin-bottom: 30px;
+}
+
+.subheading {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--dark);
+  margin: 28px 0 15px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 19px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field.full {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #35483b;
+}
+
+.required {
+  color: var(--green);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  background: #fbfcfb;
+  border-radius: 10px;
+  padding: 13px 14px;
+  font-size: 13px;
+  color: var(--text);
+  outline: none;
+  transition: .2s;
+}
+
+.field input,
+.field select {
+  min-height: 47px;
+}
+
+.field textarea {
+  min-height: 105px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: #55916e;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(30,101,73,.08);
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: #a9b1ab;
+}
+
+.hint {
+  color: #929c95;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+/* CHOICE CARDS */
+
+.choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.choice {
+  position: relative;
+}
+
+.choice input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.choice label {
+  min-height: 76px;
+  padding: 15px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.choice label:hover {
+  border-color: #9cbaa5;
+  background: #fbfdfb;
+}
+
+.choice input:checked + label {
+  border-color: var(--green);
+  background: var(--green-light);
+}
+
+.choice-icon {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: #f0f4f0;
+  color: var(--green);
+  font-size: 15px;
+}
+
+.choice-text strong {
+  display: block;
+  color: var(--dark);
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.choice-text small {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.choice-check {
+  margin-left: auto;
+  color: var(--green);
+  font-size: 15px;
+  opacity: 0;
+}
+
+.choice input:checked + label .choice-check {
+  opacity: 1;
+}
+
+.inline-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.pill-choice {
+  position: relative;
+}
+
+.pill-choice input {
+  position: absolute;
+  opacity: 0;
+}
+
+.pill-choice label {
+  display: block;
+  padding: 10px 15px;
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  font-size: 11px;
+  color: #66736a;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.pill-choice input:checked + label {
+  border-color: var(--green);
+  background: var(--green-light);
+  color: var(--green);
+  font-weight: 700;
+}
+
+/* INFO BOX */
+
+.info-box {
+  background: #f2f7f3;
+  border: 1px solid #e1ede4;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 24px;
+  display: flex;
+  gap: 12px;
+}
+
+.info-icon {
+  color: var(--green);
+  font-size: 18px;
+}
+
+.info-box p {
+  color: #64776a;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+/* NAVIGATION */
+
+.form-footer {
+  padding: 22px 38px;
+  background: #fbfcfb;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.btn {
+  border: none;
+  border-radius: 9px;
+  padding: 13px 22px;
+  font-size: 12px;
+  font-weight: 700;
+  transition: .2s;
+}
+
+.btn-primary {
+  background: var(--green);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #164d38;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: white;
+  color: #59675e;
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: #f2f5f2;
+}
+
+.btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.footer-note {
+  font-size: 10px;
+  color: #929c95;
+}
+
+/* PRIVACY */
+
+.privacy {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 24px;
+  color: #68766c;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.privacy input {
+  margin-top: 3px;
+  accent-color: var(--green);
+}
+
+/* ERROR */
+
+.error-message {
+  display: none;
+  color: var(--danger);
+  font-size: 11px;
+  margin-top: 13px;
+}
+
+.error-message.visible {
+  display: block;
+}
+
+/* SUCCESS */
+
+.success-screen {
+  display: none;
+  padding: 70px 30px;
+  text-align: center;
+}
+
+.success-screen.active {
+  display: block;
+  animation: appear .4s ease;
+}
+
+.success-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: var(--green-light);
+  color: var(--green);
+  display: grid;
+  place-items: center;
+  margin: 0 auto 24px;
+  font-size: 29px;
+}
+
+.success-screen h2 {
+  font-family: 'Manrope', sans-serif;
+  color: var(--dark);
+  font-size: 29px;
+  margin-bottom: 12px;
+}
+
+.success-screen p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.8;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* FOOTER */
+
+.site-footer {
+  text-align: center;
+  padding: 30px 20px 45px;
+  color: #87948a;
+  font-size: 10px;
+  line-height: 2;
+}
+
+.site-footer strong {
+  color: var(--dark);
+  letter-spacing: .5px;
+}
+
+@media(max-width:650px) {
+  .navbar {
+    height: 65px;
+    padding: 0 20px;
+  }
+
+  .nav-right {
+    font-size: 10px;
+  }
+
+  .hero {
+    padding: 58px 23px 75px;
+  }
+
+  .hero h1 {
+    letter-spacing: -1.5px;
+  }
+
+  .hero-description {
+    font-size: 13px;
+  }
+
+  .main {
+    padding: 0 12px;
+    margin-top: -27px;
+  }
+
+  .form-top {
+    padding: 23px 20px;
+  }
+
+  .form-body {
+    padding: 28px 20px;
+  }
+
+  .form-footer {
+    padding: 18px 20px;
+  }
+
+  .step h3 {
+    font-size: 25px;
+  }
+
+  .grid,
+  .choice-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .steps-labels span {
+    font-size: 9px;
+  }
+
+  .footer-note {
+    display: none;
+  }
+
+  .btn {
+    padding: 13px 17px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="navbar">
+  <div class="brand">
+    <div class="brand-name">MYREM.DEV</div>
+    <div class="brand-sub">DIGITAL SOLUTIONS & DEVELOPMENT</div>
+  </div>
+
+  <div class="nav-right">
+    <span class="status-dot"></span>
+    Diagnóstico digital
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="eyebrow">
+      <span class="eyebrow-line"></span>
+      MYREM INSIGHT
+    </div>
+
+    <h1>
+      Tu negocio puede <span>avanzar más.</span>
+    </h1>
+
+    <p class="hero-description">
+      Cada negocio tiene necesidades diferentes. Cuéntanos cómo trabajas,
+      qué dificultades encuentras y qué te gustaría mejorar.
+      Nosotros analizaremos las oportunidades para desarrollar soluciones
+      digitales adaptadas a tu realidad.
+    </p>
+
+    <div class="hero-meta">
+      <span>✓ Diagnóstico sin compromiso</span>
+      <span>✓ Soluciones personalizadas</span>
+      <span>✓ Atención directa</span>
+    </div>
+  </div>
+</section>
+
+<main class="main">
+
+<div class="form-card" id="formCard">
+
+  <div class="form-top" id="formTop">
+    <div class="form-top-row">
+      <h2>Diagnóstico de necesidades</h2>
+      <span class="step-counter" id="stepCounter">PASO 01 / 04</span>
+    </div>
+
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <div class="steps-labels">
+      <span class="active">Tu negocio</span>
+      <span>Funcionamiento</span>
+      <span>Necesidades</span>
+      <span>Objetivos</span>
+    </div>
+  </div>
+
+  <form id="diagnosticForm">
+
+    <div class="form-body">
+
+      <!-- PASO 1 -->
+
+      <section class="step active" data-step="0">
+
+        <div class="section-number">01 // INFORMACIÓN GENERAL</div>
+
+        <h3>Primero, queremos conocerte.</h3>
+
+        <p class="step-description">
+          Cuéntanos un poco sobre tu negocio. Esta información nos ayudará
+          a comprender tu actividad y el contexto de tus necesidades.
+        </p>
+
+        <div class="grid">
+
+          <div class="field">
+            <label for="business">Nombre del negocio <span class="required">*</span></label>
+            <input id="business" name="business" required
+              placeholder="Ej. Electrimax">
+          </div>
+
+          <div class="field">
+            <label for="contact">Nombre de contacto <span class="required">*</span></label>
+            <input id="contact" name="contact" required
+              placeholder="Tu nombre">
+          </div>
+
+          <div class="field">
+            <label for="role">Cargo o función</label>
+            <input id="role" name="role"
+              placeholder="Ej. Administrador, propietario...">
+          </div>
+
+          <div class="field">
+            <label for="industry">Rubro <span class="required">*</span></label>
+            <select id="industry" name="industry" required>
+              <option value="">Selecciona una opción</option>
+              <option>Comercio y tiendas</option>
+              <option>Alimentación y restaurantes</option>
+              <option>Servicios profesionales</option>
+              <option>Construcción e instalaciones</option>
+              <option>Salud y bienestar</option>
+              <option>Educación</option>
+              <option>Transporte y logística</option>
+              <option>Tecnología</option>
+              <option>Industria y manufactura</option>
+              <option>Otro</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="email">Correo electrónico <span class="required">*</span></label>
+            <input type="email" id="email" name="email" required
+              placeholder="contacto@empresa.cl">
+          </div>
+
+          <div class="field">
+            <label for="phone">Teléfono de contacto</label>
+            <input type="tel" id="phone" name="phone"
+              placeholder="+56 9 XXXX XXXX">
+          </div>
+
+          <div class="field full">
+            <label for="website">Sitio web o redes sociales</label>
+            <input id="website" name="website"
+              placeholder="https://...">
+          </div>
+
+          <div class="field full">
+            <label for="description">¿A qué se dedica principalmente tu negocio? <span class="required">*</span></label>
+            <textarea id="description" name="description" required
+              placeholder="Cuéntanos qué productos o servicios ofreces y cómo funciona tu negocio..."></textarea>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- PASO 2 -->
+
+      <section class="step" data-step="1">
+
+        <div class="section-number">02 // FUNCIONAMIENTO ACTUAL</div>
+
+        <h3>¿Cómo trabajas actualmente?</h3>
+
+        <p class="step-description">
+          Queremos comprender cómo organizas las actividades de tu negocio,
+          qué herramientas utilizas y cómo realizas tus procesos cotidianos.
+        </p>
+
+        <div class="field">
+          <label for="customers">¿Qué tipo de clientes atiendes?</label>
+          <textarea id="customers" name="customers"
+            placeholder="Describe brevemente a tus clientes habituales..."></textarea>
+        </div>
+
+        <div class="field" style="margin-top:20px">
+          <label for="tools">¿Qué herramientas digitales utilizas actualmente?</label>
+          <textarea id="tools" name="tools"
+            placeholder="Ej. Excel, WhatsApp, sistemas de gestión, aplicaciones, plataformas..."></textarea>
+        </div>
+
+        <div class="field" style="margin-top:20px">
+          <label for="processes">¿Cuáles son las actividades más importantes de tu día a día?</label>
+          <textarea id="processes" name="processes"
+            placeholder="Describe cómo organizas pedidos, clientes, proyectos, citas u otras actividades..."></textarea>
+        </div>
+
+        <div class="subheading">¿Cómo administras actualmente tu información?</div>
+
+        <div class="inline-options">
+          <div class="pill-choice">
+            <input type="checkbox" id="admin1" name="admin_methods" value="Hojas de cálculo">
+            <label for="admin1">Hojas de cálculo</label>
+          </div>
+          <div class="pill-choice">
+            <input type="checkbox" id="admin2" name="admin_methods" value="Aplicaciones">
+            <label for="admin2">Aplicaciones</label>
+          </div>
+          <div class="pill-choice">
+            <input type="checkbox" id="admin3" name="admin_methods" value="Papel o registros manuales">
+            <label for="admin3">Registros manuales</label>
+          </div>
+          <div class="pill-choice">
+            <input type="checkbox" id="admin4" name="admin_methods" value="Sistemas especializados">
+            <label for="admin4">Sistemas especializados</label>
+          </div>
+          <div class="pill-choice">
+            <input type="checkbox" id="admin5" name="admin_methods" value="Otros métodos">
+            <label for="admin5">Otros métodos</label>
+          </div>
+        </div>
+
+        <div class="info-box">
+          <span class="info-icon">ⓘ</span>
+          <p>
+            No necesitas utilizar herramientas tecnológicas para completar
+            este diagnóstico. También queremos conocer procesos que todavía
+            realizas manualmente.
+          </p>
+        </div>
+
+      </section>
+
+      <!-- PASO 3 -->
+
+      <section class="step" data-step="2">
+
+        <div class="section-number">03 // NECESIDADES Y OPORTUNIDADES</div>
+
+        <h3>¿Qué te gustaría mejorar?</h3>
+
+        <p class="step-description">
+          Selecciona todas las áreas que te interesen. No necesitas tener
+          una solución definida: puedes contarnos simplemente qué dificultad
+          te gustaría resolver.
+        </p>
+
+        <div class="choice-grid">
+
+          <div class="choice">
+            <input type="checkbox" id="need1" name="needs" value="Presencia digital y comunicación">
+            <label for="need1">
+              <span class="choice-icon">◈</span>
+              <span class="choice-text">
+                <strong>Presencia digital</strong>
+                <small>Web, catálogos, información y comunicación.</small>
+              </span>
+              <span class="choice-check">✓</span>
+            </label>
+          </div>
+
+          <div class="choice">
+            <input type="checkbox" id="need2" name="needs" value="Organización y administración">
+            <label for="need2">
+              <span class="choice-icon">▤</span>
+              <span class="choice-text">
+                <strong>Organización y gestión</strong>
+                <small>Clientes, inventario, citas y administración.</small>
+              </span>
+              <span class="choice-check">✓</span>
+            </label>
+          </div>
+
+          <div class="choice">
+            <input type="checkbox" id="need3" name="needs" value="Ventas y atención al cliente">
+            <label for="need3">
+              <span class="choice-icon">↗</span>
+              <span class="choice-text">
+                <strong>Ventas y atención</strong>
+                <small>Pedidos, consultas y seguimiento de clientes.</small>
+              </span>
+              <span class="choice-check">✓</span>
+            </label>
+          </div>
+
+          <div class="choice">
+            <input type="checkbox" id="need4" name="needs" value="Automatización">
+            <label for="need4">
+              <span class="choice-icon">⌘</span>
+              <span class="choice-text">
+                <strong>Automatización</strong>
+                <small>Tareas repetitivas y procesos manuales.</small>
+              </span>
+              <span class="choice-check">✓</span>
+            </label>
+          </div>
+
+          <div class="choice">
+            <input type="checkbox" id="need5" name="needs" value="Aplicaciones y herramientas personalizadas">
+            <label for="need5">
+              <span class="choice-icon">⌘</span>
+              <span class="choice-text">
+                <strong>Herramientas personalizadas</strong>
+                <small>Aplicaciones, plataformas y sistemas propios.</small>
+              </span>
+              <span class="choice-check">✓</span>
+            </label>
+          </div>
+
+          <div class="choice">
+            <input type="checkbox" id="need6" name="needs" value="Mejoras de sistemas existentes">
+            <label for="need6">
+              <span class="choice-icon">↻</span>
+              <span class="choice-text">
+                <strong>Mejoras existentes</strong>
+                <small>Optimización, mantenimiento y rediseño.</small>
+              </span>
+              <span class="choice-check">✓</span>
+            </label>
+          </div>
+
+        </div>
+
+        <div class="field" style="margin-top:26px">
+          <label for="difficulties">¿Qué dificultades o tareas te gustaría mejorar?</label>
+          <textarea id="difficulties" name="difficulties"
+            placeholder="Describe cualquier problema, tarea repetitiva o dificultad que encuentres..."></textarea>
+        </div>
+
+        <div class="field" style="margin-top:20px">
+          <label for="ideas">¿Tienes alguna idea de herramienta o solución que te gustaría implementar?</label>
+          <textarea id="ideas" name="ideas"
+            placeholder="No importa si todavía no sabes exactamente cómo funcionaría. Cuéntanos tu idea..."></textarea>
+        </div>
+
+      </section>
+
+      <!-- PASO 4 -->
+
+      <section class="step" data-step="3">
+
+        <div class="section-number">04 // OBJETIVOS Y EXPECTATIVAS</div>
+
+        <h3>Imaginemos lo que podemos mejorar.</h3>
+
+        <p class="step-description">
+          Para terminar, queremos conocer tus objetivos y qué importancia
+          tendría implementar una solución para tu negocio.
+        </p>
+
+        <div class="field">
+          <label for="goal">¿Qué te gustaría conseguir o mejorar principalmente?</label>
+          <textarea id="goal" name="goal"
+            placeholder="Ej. Ahorrar tiempo, organizar clientes, facilitar pedidos, centralizar información..."></textarea>
+        </div>
+
+        <div class="subheading">¿Qué tan importante es resolver esta necesidad?</div>
+
+        <div class="inline-options">
+          <div class="pill-choice">
+            <input type="radio" id="priority1" name="priority" value="Alta">
+            <label for="priority1">Alta</label>
+          </div>
+          <div class="pill-choice">
+            <input type="radio" id="priority2" name="priority" value="Media">
+            <label for="priority2">Media</label>
+          </div>
+          <div class="pill-choice">
+            <input type="radio" id="priority3" name="priority" value="Baja">
+            <label for="priority3">Baja</label>
+          </div>
+          <div class="pill-choice">
+            <input type="radio" id="priority4" name="priority" value="Solo estoy explorando opciones">
+            <label for="priority4">Estoy explorando</label>
+          </div>
+        </div>
+
+        <div class="subheading">¿Tienes un presupuesto aproximado?</div>
+
+        <div class="field">
+          <select name="budget" id="budget">
+            <option value="">Prefiero no indicarlo</option>
+            <option value="Menos de $100.000 CLP">Menos de $100.000 CLP</option>
+            <option value="$100.000 - $250.000 CLP">$100.000 - $250.000 CLP</option>
+            <option value="$250.000 - $500.000 CLP">$250.000 - $500.000 CLP</option>
+            <option value="$500.000 - $1.000.000 CLP">$500.000 - $1.000.000 CLP</option>
+            <option value="Más de $1.000.000 CLP">Más de $1.000.000 CLP</option>
+            <option value="Necesito orientación">Necesito orientación</option>
+          </select>
+          <span class="hint">Este campo es opcional y no determina si podemos ayudarte.</span>
+        </div>
+
+        <div class="field" style="margin-top:20px">
+          <label for="extra">¿Hay algo más que debamos conocer?</label>
+          <textarea id="extra" name="extra"
+            placeholder="Cualquier información adicional que consideres importante..."></textarea>
+        </div>
+
+        <div class="privacy">
+          <input type="checkbox" id="consent" name="consent" value="yes" required>
+          <label for="consent">
+            Autorizo a MYREM.DEV a utilizar la información proporcionada
+            para evaluar mis necesidades, elaborar un diagnóstico y
+            contactarme en relación con esta solicitud.
+          </label>
+        </div>
+
+        <div class="error-message" id="consentError">
+          Debes aceptar esta autorización para enviar el diagnóstico.
+        </div>
+
+        <div class="info-box">
+          <span class="info-icon">✓</span>
+          <p>
+            Una vez recibido el diagnóstico, nuestro equipo revisará la
+            información y evaluará posibles soluciones. Completar este
+            formulario no implica contratar un servicio ni garantiza
+            una propuesta comercial.
+          </p>
+        </div>
+
+      </section>
+
+      <div class="error-message" id="stepError">
+        Revisa los campos obligatorios antes de continuar.
+      </div>
+
+    </div>
+
+    <div class="form-footer" id="formFooter">
+      <button type="button" class="btn btn-secondary" id="prevBtn" disabled>
+        ← Anterior
+      </button>
+
+      <span class="footer-note">MYREM.DEV · Your ideas, engineered.</span>
+
+      <button type="button" class="btn btn-primary" id="nextBtn">
+        Continuar →
+      </button>
+    </div>
+
+  </form>
+
+  <!-- CONFIRMATION -->
+
+  <div class="success-screen" id="successScreen">
+    <div class="success-icon">✓</div>
+
+    <h2>¡Diagnóstico completado!</h2>
+
+    <p>
+      Has terminado de completar el formulario de MYREM INSIGHT.
+      Esta versión es una demostración del sistema: todavía no transmite
+      ni almacena tus respuestas. La recepción de diagnósticos estará
+      disponible cuando habilitemos el sistema de envío.
+    </p>
+  </div>
+
+</div>
+
+</main>
+
+<footer class="site-footer">
+  <strong>MYREM.DEV</strong><br>
+  Digital Solutions & Development<br>
+  Your ideas, engineered.
+</footer>
+
+<script>
+const form = document.getElementById("diagnosticForm");
+const steps = [...document.querySelectorAll(".step")];
+const progressFill = document.getElementById("progressFill");
+const stepCounter = document.getElementById("stepCounter");
+const labels = [...document.querySelectorAll(".steps-labels span")];
+
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+
+const stepError = document.getElementById("stepError");
+const consentError = document.getElementById("consentError");
+
+const formTop = document.getElementById("formTop");
+const formFooter = document.getElementById("formFooter");
+
+let currentStep = 0;
+
+function updateStep() {
+  steps.forEach((step, index) => {
+    step.classList.toggle("active", index === currentStep);
+  });
+
+  labels.forEach((label, index) => {
+    label.classList.toggle("active", index <= currentStep);
+  });
+
+  progressFill.style.width = ((currentStep + 1) / steps.length * 100) + "%";
+
+  stepCounter.textContent =
+    `PASO 0${currentStep + 1} / 0${steps.length}`;
+
+  prevBtn.disabled = currentStep === 0;
+
+  nextBtn.textContent =
+    currentStep === steps.length - 1
+      ? "Finalizar diagnóstico →"
+      : "Continuar →";
+
+  stepError.classList.remove("visible");
+  consentError.classList.remove("visible");
+}
+
+function validateCurrentStep() {
+  const current = steps[currentStep];
+  const requiredFields = [...current.querySelectorAll("[required]")];
+
+  let valid = true;
+
+  for (const field of requiredFields) {
+    if (field.type === "checkbox" || field.type === "radio") {
+      if (!field.checked) {
+        valid = false;
+        break;
+      }
+    } else if (!field.checkValidity()) {
+      valid = false;
+      field.reportValidity();
+      break;
+    }
+  }
+
+  if (!valid) {
+    stepError.classList.add("visible");
+    return false;
+  }
+
+  return true;
+}
+
+nextBtn.addEventListener("click", () => {
+  if (!validateCurrentStep()) return;
+
+  if (currentStep < steps.length - 1) {
+    currentStep++;
+    updateStep();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    return;
+  }
+
+  if (!document.getElementById("consent").checked) {
+    consentError.classList.add("visible");
+    return;
+  }
+
+  // Primera fase: simulación de finalización.
+  // La integración con Supabase se implementará posteriormente.
+
+  formTop.style.display = "none";
+  formFooter.style.display = "none";
+  form.style.display = "none";
+
+  document.getElementById("successScreen").classList.add("active");
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+prevBtn.addEventListener("click", () => {
+  if (currentStep > 0) {
+    currentStep--;
+    updateStep();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+});
+
+// Evita envíos accidentales con Enter.
+form.addEventListener("submit", event => {
+  event.preventDefault();
+});
+
+updateStep();
+</script>
+
+</body>
+</html>
