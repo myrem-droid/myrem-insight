@@ -1,0 +1,1508 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10251d">
+  <title>MYREM ADMIN — Panel de administración</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --bg: #0b1511;
+      --surface: #111f18;
+      --surface2: #182920;
+      --border: #263b2e;
+      --text: #edf5ef;
+      --muted: #9aafa0;
+      --green: #69d69a;
+      --green-dark: #183e2b;
+      --red: #ff7777;
+      --yellow: #f0c66e;
+      --blue: #79b9f5;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, system-ui, Arial, sans-serif;
+      min-height: 100vh;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .login-screen {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      padding: 34px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: 850;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+
+    .logo span {
+      color: var(--green);
+    }
+
+    .login-card h1 {
+      font-size: 22px;
+      margin: 30px 0 8px;
+    }
+
+    .field {
+      margin-top: 18px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .field input,
+    .toolbar input,
+    .toolbar select,
+    .status-select {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 9px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--green);
+    }
+
+    .primary-btn {
+      width: 100%;
+      margin-top: 22px;
+      padding: 13px;
+      border: 0;
+      border-radius: 9px;
+      background: var(--green);
+      color: #092014;
+      font-weight: 800;
+    }
+
+    .primary-btn:hover {
+      filter: brightness(1.08);
+    }
+
+    .message {
+      margin-top: 15px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--red);
+    }
+
+    .app {
+      min-height: 100vh;
+    }
+
+    .topbar {
+      height: 72px;
+      padding: 0 5%;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      background: var(--surface);
+    }
+
+    .topbar .logo {
+      margin: 0;
+      font-size: 21px;
+    }
+
+    .account {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .secondary-btn {
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 9px 13px;
+    }
+
+    .secondary-btn:hover {
+      border-color: var(--green);
+    }
+
+    .container {
+      width: min(1400px, 92%);
+      margin: 35px auto;
+    }
+
+    .page-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 27px;
+    }
+
+    .page-heading h1 {
+      margin: 0 0 7px;
+      font-size: 29px;
+      letter-spacing: -1px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .stat {
+      padding: 21px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      background: var(--surface);
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .stat-number {
+      font-size: 31px;
+      font-weight: 800;
+      margin-top: 10px;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1fr 220px 130px;
+      gap: 12px;
+      margin-bottom: 17px;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      overflow: hidden;
+    }
+
+    .panel-heading {
+      padding: 19px 21px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .panel-heading h2 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .diagnostic-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .diagnostic {
+      padding: 19px 21px;
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr auto;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .diagnostic:last-child {
+      border-bottom: 0;
+    }
+
+    .diagnostic:hover {
+      background: var(--surface2);
+    }
+
+    .business-name {
+      font-weight: 750;
+      margin-bottom: 5px;
+    }
+
+    .business-info {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      padding: 6px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 750;
+      background: var(--surface2);
+      color: var(--muted);
+    }
+
+    .badge.pending {
+      color: var(--yellow);
+      background: #40351c;
+    }
+
+    .badge.contacted {
+      color: var(--blue);
+      background: #1b3346;
+    }
+
+    .badge.proposal_sent {
+      color: #c5a5ff;
+      background: #342449;
+    }
+
+    .badge.client {
+      color: var(--green);
+      background: #183e2b;
+    }
+
+    .badge.discarded {
+      color: var(--red);
+      background: #432323;
+    }
+
+    .open-btn {
+      padding: 9px 13px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      border-radius: 8px;
+    }
+
+    .open-btn:hover {
+      border-color: var(--green);
+    }
+
+    .empty {
+      text-align: center;
+      padding: 45px 20px;
+      color: var(--muted);
+    }
+
+    .loading {
+      padding: 35px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .error-box {
+      margin-bottom: 18px;
+      padding: 13px;
+      background: #432323;
+      color: #ffb4b4;
+      border: 1px solid #754040;
+      border-radius: 9px;
+      font-size: 13px;
+    }
+
+    /* DETALLE */
+
+    .detail-view {
+      margin-top: 22px;
+    }
+
+    .detail-header {
+      padding: 23px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .detail-header h2 {
+      margin: 0 0 8px;
+      font-size: 23px;
+    }
+
+    .detail-content {
+      padding: 23px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 17px;
+    }
+
+    .detail-section {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 17px;
+      min-width: 0;
+    }
+
+    .detail-section.full {
+      grid-column: 1 / -1;
+    }
+
+    .detail-section h3 {
+      font-size: 14px;
+      margin: 0 0 15px;
+      color: var(--green);
+    }
+
+    .data-row {
+      margin-bottom: 13px;
+    }
+
+    .data-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .data-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+
+    .data-value {
+      font-size: 13px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .finding {
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      margin-bottom: 11px;
+      background: var(--surface);
+    }
+
+    .finding:last-child {
+      margin-bottom: 0;
+    }
+
+    .finding-title {
+      font-weight: 750;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .finding p {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 7px 0 0;
+    }
+
+    .classification {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    .classification.confirmed_problem {
+      color: var(--red);
+    }
+
+    .classification.potential_opportunity {
+      color: var(--green);
+    }
+
+    .classification.insufficient_information {
+      color: var(--yellow);
+    }
+
+    .solution {
+      border-left: 3px solid var(--green);
+      padding: 12px 14px;
+      background: var(--surface);
+      margin-bottom: 10px;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .solution strong {
+      font-size: 13px;
+    }
+
+    .solution p,
+    .solution li {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .solution ul {
+      padding-left: 18px;
+      margin-bottom: 0;
+    }
+
+    .status-area {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 17px;
+    }
+
+    .status-select {
+      width: auto;
+      min-width: 200px;
+    }
+
+    .detail-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 17px;
+    }
+
+    .questions {
+      padding-left: 20px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .footer-note {
+      padding: 15px 22px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 850px) {
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .diagnostic {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .toolbar {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .toolbar input {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .topbar {
+        padding: 0 4%;
+      }
+
+      .account span {
+        display: none;
+      }
+
+      .container {
+        width: 94%;
+        margin: 24px auto;
+      }
+
+      .page-heading {
+        align-items: flex-start;
+      }
+
+      .page-heading h1 {
+        font-size: 24px;
+      }
+
+      .stats {
+        gap: 9px;
+      }
+
+      .stat {
+        padding: 15px;
+      }
+
+      .stat-number {
+        font-size: 25px;
+      }
+
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar input {
+        grid-column: auto;
+      }
+
+      .diagnostic {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .diagnostic .open-btn {
+        width: 100%;
+      }
+
+      .detail-content {
+        grid-template-columns: 1fr;
+        padding: 13px;
+      }
+
+      .detail-section.full {
+        grid-column: auto;
+      }
+
+      .login-card {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- INICIO DE SESIÓN -->
+
+  <section id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <div class="logo">MYREM<span>.</span>ADMIN</div>
+      <p class="muted">Panel privado de administración</p>
+
+      <h1>Iniciar sesión</h1>
+      <p class="muted" style="font-size:13px">
+        Accede para gestionar los diagnósticos de tus clientes.
+      </p>
+
+      <form id="loginForm">
+        <div class="field">
+          <label for="email">Correo electrónico</label>
+          <input
+            id="email"
+            type="email"
+            value="eltutu2207@gmail.com"
+            autocomplete="username"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="password">Contraseña</label>
+          <input
+            id="password"
+            type="password"
+            autocomplete="current-password"
+            required
+          >
+        </div>
+
+        <button class="primary-btn" id="loginButton" type="submit">
+          Entrar al panel
+        </button>
+
+        <div id="loginMessage" class="message"></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- APLICACIÓN -->
+
+  <main id="app" class="app hidden">
+
+    <header class="topbar">
+      <div class="logo">MYREM<span>.</span>ADMIN</div>
+
+      <div class="account">
+        <span id="accountEmail"></span>
+        <button class="secondary-btn" id="logoutButton">
+          Cerrar sesión
+        </button>
+      </div>
+    </header>
+
+    <div class="container">
+
+      <div id="globalError" class="error-box hidden"></div>
+
+      <section id="dashboard">
+
+        <div class="page-heading">
+          <div>
+            <h1>Panel de control</h1>
+            <div class="muted" style="font-size:13px">
+              Gestiona los negocios y sus oportunidades digitales.
+            </div>
+          </div>
+
+          <button class="secondary-btn" id="refreshButton">
+            ↻ Actualizar
+          </button>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-label">Diagnósticos recibidos</div>
+            <div class="stat-number" id="totalStat">0</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-label">Pendientes de revisar</div>
+            <div class="stat-number" id="pendingStat">0</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-label">Oportunidades detectadas</div>
+            <div class="stat-number" id="opportunityStat">0</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-label">Clientes</div>
+            <div class="stat-number" id="clientStat">0</div>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <input
+            id="searchInput"
+            type="search"
+            placeholder="Buscar negocio, correo o industria..."
+          >
+
+          <select id="statusFilter">
+            <option value="">Todos los estados</option>
+            <option value="pending">Pendiente</option>
+            <option value="contacted">Contactado</option>
+            <option value="proposal_sent">Propuesta enviada</option>
+            <option value="client">Cliente</option>
+            <option value="discarded">Descartado</option>
+          </select>
+
+          <button class="secondary-btn" id="clearFilters">
+            Limpiar filtros
+          </button>
+        </div>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <h2>Diagnósticos recibidos</h2>
+            <span id="resultCount" class="muted" style="font-size:12px">
+              0 resultados
+            </span>
+          </div>
+
+          <div id="diagnosticList" class="diagnostic-list">
+            <div class="loading">Cargando diagnósticos...</div>
+          </div>
+        </section>
+      </section>
+
+      <!-- FICHA DEL NEGOCIO -->
+
+      <section id="detailView" class="detail-view hidden">
+        <button class="secondary-btn" id="backButton">
+          ← Volver a diagnósticos
+        </button>
+
+        <div id="detailContent" class="panel" style="margin-top:15px"></div>
+      </section>
+
+    </div>
+  </main>
+
+<script>
+(() => {
+  "use strict";
+
+  // --------------------------------------------------
+  // CONFIGURACIÓN
+  // --------------------------------------------------
+
+  const SUPABASE_URL =
+    "https://abpmnqwrkzkilvqjhlef.supabase.co";
+
+  const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_jlAV6X9U-82rOAGEaHWAuw_pG7Iyjij";
+
+  const ADMIN_EMAIL = "eltutu2207@gmail.com";
+
+  const supabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY,
+    {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    }
+  );
+
+  // --------------------------------------------------
+  // ELEMENTOS
+  // --------------------------------------------------
+
+  const $ = (id) => document.getElementById(id);
+
+  const loginScreen = $("loginScreen");
+  const app = $("app");
+  const dashboard = $("dashboard");
+  const detailView = $("detailView");
+  const loginForm = $("loginForm");
+  const loginMessage = $("loginMessage");
+  const loginButton = $("loginButton");
+  const diagnosticList = $("diagnosticList");
+  const globalError = $("globalError");
+
+  let currentUser = null;
+  let diagnostics = [];
+  let selectedDiagnostic = null;
+
+  const statusLabels = {
+    pending: "Pendiente",
+    contacted: "Contactado",
+    proposal_sent: "Propuesta enviada",
+    client: "Cliente",
+    discarded: "Descartado"
+  };
+
+  // --------------------------------------------------
+  // UTILIDADES
+  // --------------------------------------------------
+
+  function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    })[char]);
+  }
+
+  function safeObject(value) {
+    if (value && typeof value === "object" && !Array.isArray(value)) {
+      return value;
+    }
+    return {};
+  }
+
+  function displayValue(value) {
+    if (value === null || value === undefined || value === "") {
+      return "No especificado";
+    }
+
+    if (Array.isArray(value)) {
+      return value.length
+        ? value.map(displayValue).join(", ")
+        : "No especificado";
+    }
+
+    if (typeof value === "object") {
+      return JSON.stringify(value, null, 2);
+    }
+
+    return String(value);
+  }
+
+  function formatDate(value) {
+    if (!value) return "Fecha desconocida";
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return "Fecha desconocida";
+    }
+
+    return date.toLocaleString("es-CL", {
+      dateStyle: "medium",
+      timeStyle: "short"
+    });
+  }
+
+  function getStatus(status) {
+    return status || "pending";
+  }
+
+  function showError(message) {
+    globalError.textContent = message;
+    globalError.classList.remove("hidden");
+  }
+
+  function clearError() {
+    globalError.textContent = "";
+    globalError.classList.add("hidden");
+  }
+
+  function showLogin(message = "") {
+    loginScreen.classList.remove("hidden");
+    app.classList.add("hidden");
+    loginMessage.textContent = message;
+  }
+
+  function showApp() {
+    loginScreen.classList.add("hidden");
+    app.classList.remove("hidden");
+    $("accountEmail").textContent = currentUser.email;
+  }
+
+  function getAnalysis(diagnostic) {
+    return safeObject(diagnostic.ai_analysis);
+  }
+
+  function getAnswers(diagnostic) {
+    return safeObject(diagnostic.answers);
+  }
+
+  // --------------------------------------------------
+  // AUTENTICACIÓN
+  // --------------------------------------------------
+
+  async function verifyUser(user) {
+    if (!user || user.email?.toLowerCase() !== ADMIN_EMAIL) {
+      await supabase.auth.signOut();
+      currentUser = null;
+      showLogin("Esta cuenta no tiene autorización para acceder.");
+      return false;
+    }
+
+    currentUser = user;
+    showApp();
+    return true;
+  }
+
+  loginForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    loginButton.disabled = true;
+    loginButton.textContent = "Verificando...";
+    loginMessage.textContent = "";
+
+    const email = $("email").value.trim().toLowerCase();
+    const password = $("password").value;
+
+    try {
+      if (email !== ADMIN_EMAIL) {
+        throw new Error("Correo no autorizado.");
+      }
+
+      const { data, error } =
+        await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+
+      if (error) throw error;
+
+      const allowed = await verifyUser(data.user);
+
+      if (allowed) {
+        $("password").value = "";
+        await loadDiagnostics();
+      }
+
+    } catch (error) {
+      loginMessage.textContent =
+        error.message || "No fue posible iniciar sesión.";
+    } finally {
+      loginButton.disabled = false;
+      loginButton.textContent = "Entrar al panel";
+    }
+  });
+
+  $("logoutButton").addEventListener("click", async () => {
+    await supabase.auth.signOut();
+    currentUser = null;
+    diagnostics = [];
+    showLogin("Sesión cerrada correctamente.");
+  });
+
+  supabase.auth.onAuthStateChange(async (event, session) => {
+    if (event === "SIGNED_OUT") {
+      currentUser = null;
+      showLogin();
+      return;
+    }
+
+    if (session?.user) {
+      if (
+        !currentUser ||
+        currentUser.id !== session.user.id
+      ) {
+        const allowed = await verifyUser(session.user);
+
+        if (allowed) {
+          await loadDiagnostics();
+        }
+      }
+    }
+  });
+
+  async function initialize() {
+    try {
+      const { data, error } = await supabase.auth.getSession();
+
+      if (error) throw error;
+
+      if (data.session?.user) {
+        const allowed = await verifyUser(data.session.user);
+
+        if (allowed) {
+          await loadDiagnostics();
+        }
+      } else {
+        showLogin();
+      }
+
+    } catch (error) {
+      showLogin(
+        "No fue posible verificar la sesión. Recarga la página."
+      );
+    }
+  }
+
+  // --------------------------------------------------
+  // CARGAR DIAGNÓSTICOS
+  // --------------------------------------------------
+
+  async function loadDiagnostics() {
+    if (!currentUser) return;
+
+    clearError();
+
+    diagnosticList.innerHTML =
+      '<div class="loading">Cargando diagnósticos...</div>';
+
+    try {
+      const { data, error } = await supabase
+        .from("diagnostics")
+        .select("id, created_at, status, answers, ai_analysis")
+        .order("created_at", { ascending: false })
+        .limit(500);
+
+      if (error) throw error;
+
+      diagnostics = data || [];
+
+      updateStatistics();
+      renderDiagnostics();
+
+      if (selectedDiagnostic) {
+        const updated = diagnostics.find(
+          (item) => item.id === selectedDiagnostic.id
+        );
+
+        if (updated) {
+          selectedDiagnostic = updated;
+          renderDetail(updated);
+        } else {
+          selectedDiagnostic = null;
+          detailView.classList.add("hidden");
+          dashboard.classList.remove("hidden");
+        }
+      }
+
+    } catch (error) {
+      diagnosticList.innerHTML =
+        '<div class="empty">No fue posible cargar los diagnósticos.</div>';
+
+      showError(
+        error.message ||
+        "Error al consultar Supabase. Comprueba tus permisos y conexión."
+      );
+    }
+  }
+
+  // --------------------------------------------------
+  // ESTADÍSTICAS
+  // --------------------------------------------------
+
+  function updateStatistics() {
+    const pending = diagnostics.filter(
+      item => getStatus(item.status) === "pending"
+    ).length;
+
+    const clients = diagnostics.filter(
+      item => getStatus(item.status) === "client"
+    ).length;
+
+    const opportunities = diagnostics.reduce(
+      (total, item) => {
+        const analysis = getAnalysis(item);
+        const summary = safeObject(analysis.classification_summary);
+
+        return total + Number(
+          summary.potential_opportunities || 0
+        );
+      },
+      0
+    );
+
+    $("totalStat").textContent = diagnostics.length;
+    $("pendingStat").textContent = pending;
+    $("opportunityStat").textContent = opportunities;
+    $("clientStat").textContent = clients;
+  }
+
+  // --------------------------------------------------
+  // LISTADO Y FILTROS
+  // --------------------------------------------------
+
+  function renderDiagnostics() {
+    const search = $("searchInput").value.toLowerCase().trim();
+    const status = $("statusFilter").value;
+
+    const filtered = diagnostics.filter(item => {
+      const answers = getAnswers(item);
+
+      const searchable = [
+        answers.business,
+        answers.contact,
+        answers.email,
+        answers.industry
+      ].map(displayValue).join(" ").toLowerCase();
+
+      const matchesSearch = !search || searchable.includes(search);
+      const matchesStatus =
+        !status || getStatus(item.status) === status;
+
+      return matchesSearch && matchesStatus;
+    });
+
+    $("resultCount").textContent =
+      `${filtered.length} resultado(s)`;
+
+    if (!filtered.length) {
+      diagnosticList.innerHTML = `
+        <div class="empty">
+          No se encontraron diagnósticos con esos filtros.
+        </div>
+      `;
+      return;
+    }
+
+    diagnosticList.innerHTML = filtered.map(item => {
+      const answers = getAnswers(item);
+      const statusValue = getStatus(item.status);
+      const analysis = getAnalysis(item);
+      const summary = safeObject(analysis.classification_summary);
+
+      const opportunityCount =
+        Number(summary.potential_opportunities || 0);
+
+      return `
+        <article class="diagnostic">
+          <div>
+            <div class="business-name">
+              ${escapeHTML(displayValue(answers.business))}
+            </div>
+            <div class="business-info">
+              ${escapeHTML(displayValue(answers.industry))}
+            </div>
+          </div>
+
+          <div>
+            <div class="business-info">Recibido</div>
+            <div style="font-size:13px;margin-top:5px">
+              ${escapeHTML(formatDate(item.created_at))}
+            </div>
+          </div>
+
+          <div>
+            <span class="badge ${escapeHTML(statusValue)}">
+              ${escapeHTML(statusLabels[statusValue] || statusValue)}
+            </span>
+            <div class="business-info" style="margin-top:7px">
+              ${opportunityCount} oportunidad(es)
+            </div>
+          </div>
+
+          <button
+            class="open-btn"
+            data-open="${escapeHTML(item.id)}"
+          >
+            Ver ficha →
+          </button>
+        </article>
+      `;
+    }).join("");
+  }
+
+  $("searchInput").addEventListener("input", renderDiagnostics);
+  $("statusFilter").addEventListener("change", renderDiagnostics);
+
+  $("clearFilters").addEventListener("click", () => {
+    $("searchInput").value = "";
+    $("statusFilter").value = "";
+    renderDiagnostics();
+  });
+
+  diagnosticList.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-open]");
+
+    if (!button) return;
+
+    const diagnostic = diagnostics.find(
+      item => String(item.id) === button.dataset.open
+    );
+
+    if (diagnostic) openDetail(diagnostic);
+  });
+
+  $("refreshButton").addEventListener("click", loadDiagnostics);
+
+  // --------------------------------------------------
+  // FICHA DEL NEGOCIO
+  // --------------------------------------------------
+
+  function dataRow(label, value) {
+    return `
+      <div class="data-row">
+        <div class="data-label">${escapeHTML(label)}</div>
+        <div class="data-value">${escapeHTML(displayValue(value))}</div>
+      </div>
+    `;
+  }
+
+  function renderFindings(findings) {
+    if (!Array.isArray(findings) || !findings.length) {
+      return '<p class="muted">No hay hallazgos registrados.</p>';
+    }
+
+    return findings.map(finding => {
+      const classification =
+        finding.classification || "insufficient_information";
+
+      const labels = {
+        confirmed_problem: "Problema confirmado",
+        potential_opportunity: "Oportunidad potencial",
+        insufficient_information: "Información insuficiente"
+      };
+
+      return `
+        <div class="finding">
+          <div class="classification ${escapeHTML(classification)}">
+            ${escapeHTML(labels[classification] || classification)}
+          </div>
+
+          <div class="finding-title" style="margin-top:7px">
+            ${escapeHTML(finding.title)}
+          </div>
+
+          <p><strong>Evidencia:</strong> ${escapeHTML(finding.evidence)}</p>
+          <p><strong>Impacto:</strong> ${escapeHTML(finding.impact)}</p>
+          <p><strong>Prioridad:</strong> ${escapeHTML(finding.priority)}</p>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function renderSolutions(solutions) {
+    if (!Array.isArray(solutions) || !solutions.length) {
+      return '<p class="muted">No se propusieron soluciones específicas.</p>';
+    }
+
+    return solutions.map(solution => `
+      <div class="solution">
+        <strong>${escapeHTML(solution.title)}</strong>
+        <p>${escapeHTML(solution.description)}</p>
+
+        ${
+          Array.isArray(solution.benefits)
+            ? `<ul>${solution.benefits.map(benefit =>
+                `<li>${escapeHTML(benefit)}</li>`
+              ).join("")}</ul>`
+            : ""
+        }
+
+        <p>
+          Prioridad: ${escapeHTML(solution.priority)}
+          · ${solution.validation_needed
+            ? "Requiere validación"
+            : "Problema declarado"}
+        </p>
+      </div>
+    `).join("");
+  }
+
+  function renderQuestions(questions) {
+    if (!Array.isArray(questions) || !questions.length) {
+      return '<p class="muted">No hay preguntas adicionales.</p>';
+    }
+
+    return `
+      <ol class="questions">
+        ${questions.map(question =>
+          `<li>${escapeHTML(question)}</li>`
+        ).join("")}
+      </ol>
+    `;
+  }
+
+  function renderDetail(diagnostic) {
+    const answers = getAnswers(diagnostic);
+    const analysis = getAnalysis(diagnostic);
+    const recommendation =
+      safeObject(analysis.commercial_recommendation);
+
+    const classification =
+      safeObject(analysis.classification_summary);
+
+    const currentStatus = getStatus(diagnostic.status);
+
+    const answerFields = [
+      ["Descripción", answers.description],
+      ["Procesos actuales", answers.processes],
+      ["Dificultades", answers.difficulties],
+      ["Necesidades", answers.needs],
+      ["Objetivo", answers.goal],
+      ["Prioridad declarada", answers.priority],
+      ["Sitio web", answers.website]
+    ];
+
+    const contactFields = [
+      ["Contacto", answers.contact],
+      ["Correo", answers.email],
+      ["Industria", answers.industry],
+      ["Fecha de recepción", formatDate(diagnostic.created_at)]
+    ];
+
+    $("detailContent").innerHTML = `
+      <div class="detail-header">
+        <div class="muted" style="font-size:12px;margin-bottom:8px">
+          FICHA DEL NEGOCIO
+        </div>
+
+        <h2>${escapeHTML(displayValue(answers.business))}</h2>
+
+        <div class="muted" style="font-size:13px">
+          ${escapeHTML(displayValue(answers.industry))}
+          · ID: ${escapeHTML(diagnostic.id)}
+        </div>
+
+        <div class="status-area">
+          <label for="detailStatus" class="muted" style="font-size:13px">
+            Estado comercial:
+          </label>
+
+          <select id="detailStatus" class="status-select">
+            ${Object.entries(statusLabels).map(([value, label]) => `
+              <option value="${value}" ${currentStatus === value ? "selected" : ""}>
+                ${label}
+              </option>
+            `).join("")}
+          </select>
+
+          <button class="secondary-btn" id="saveStatusButton">
+            Guardar estado
+          </button>
+        </div>
+      </div>
+
+      <div class="detail-content">
+
+        <section class="detail-section">
+          <h3>Información de contacto</h3>
+          ${contactFields.map(([label, value]) =>
+            dataRow(label, value)
+          ).join("")}
+        </section>
+
+        <section class="detail-section">
+          <h3>Resumen del análisis V3</h3>
+
+          ${dataRow("Resumen ejecutivo", analysis.executive_summary)}
+          ${dataRow("Problemas confirmados", classification.confirmed_problems)}
+          ${dataRow("Oportunidades potenciales", classification.potential_opportunities)}
+          ${dataRow("Motor", analysis.engine)}
+        </section>
+
+        <section class="detail-section full">
+          <h3>Respuestas originales del negocio</h3>
+
+          ${answerFields.map(([label, value]) =>
+            dataRow(label, value)
+          ).join("")}
+        </section>
+
+        <section class="detail-section full">
+          <h3>Problemas y oportunidades detectadas</h3>
+
+          ${renderFindings(analysis.findings)}
+        </section>
+
+        <section class="detail-section full">
+          <h3>Soluciones propuestas</h3>
+
+          ${renderSolutions(analysis.proposed_solutions)}
+        </section>
+
+        <section class="detail-section">
+          <h3>Recomendación comercial</h3>
+
+          ${dataRow("Enfoque", recommendation.approach)}
+          ${dataRow("Prioridad", recommendation.priority)}
+          ${dataRow("Complejidad", recommendation.complexity)}
+          ${dataRow("Servicio sugerido", recommendation.suggested_service)}
+          ${dataRow("Solución sugerida", recommendation.suggested_solution)}
+        </section>
+
+        <section class="detail-section">
+          <h3>Preguntas para el cliente</h3>
+          ${renderQuestions(analysis.follow_up_questions)}
+        </section>
+
+        <section class="detail-section full">
+          <h3>Nota del análisis</h3>
+          <div class="data-value">
+            ${escapeHTML(analysis.disclaimer || "Sin observaciones adicionales.")}
+          </div>
+        </section>
+
+      </div>
+
+      <div class="footer-note">
+        Este diagnóstico fue generado automáticamente. Las oportunidades
+        potenciales deben validarse con el negocio antes de presentar
+        una propuesta definitiva.
+      </div>
+    `;
+
+    $("saveStatusButton").addEventListener("click", () => {
+      updateStatus(
+        diagnostic.id,
+        $("detailStatus").value
+      );
+    });
+  }
+
+  function openDetail(diagnostic) {
+    selectedDiagnostic = diagnostic;
+
+    dashboard.classList.add("hidden");
+    detailView.classList.remove("hidden");
+
+    renderDetail(diagnostic);
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }
+
+  $("backButton").addEventListener("click", () => {
+    selectedDiagnostic = null;
+    detailView.classList.add("hidden");
+    dashboard.classList.remove("hidden");
+    renderDiagnostics();
+  });
+
+  // --------------------------------------------------
+  // ACTUALIZAR ESTADO COMERCIAL
+  // --------------------------------------------------
+
+  async function updateStatus(id, newStatus) {
+    const allowedStatuses = Object.keys(statusLabels);
+
+    if (!allowedStatuses.includes(newStatus)) {
+      showError("Estado comercial no válido.");
+      return;
+    }
+
+    clearError();
+
+    const button = $("saveStatusButton");
+    button.disabled = true;
+    button.textContent = "Guardando...";
+
+    try {
+      const { error } = await supabase
+        .from("diagnostics")
+        .update({ status: newStatus })
+        .eq("id", id);
+
+      if (error) throw error;
+
+      const diagnostic = diagnostics.find(
+        item => String(item.id) === String(id)
+      );
+
+      if (diagnostic) {
+        diagnostic.status = newStatus;
+      }
+
+      if (selectedDiagnostic?.id === id) {
+        selectedDiagnostic.status = newStatus;
+      }
+
+      updateStatistics();
+      renderDiagnostics();
+
+      if (selectedDiagnostic) {
+        renderDetail(selectedDiagnostic);
+      }
+
+    } catch (error) {
+      showError(
+        error.message ||
+        "No fue posible actualizar el estado comercial."
+      );
+
+      button.disabled = false;
+      button.textContent = "Guardar estado";
+    }
+  }
+
+  // --------------------------------------------------
+  // INICIAR
+  // --------------------------------------------------
+
+  initialize();
+
+})();
+</script>
+
+</body>
+</html>
